@@ -90,7 +90,7 @@ If you use **SigClean** in your research or projects, please cite it as:
 
 ```bibtex
 @software{sigclean2024,
-  author    = {Your Name},
+  author    = {Diptiman Mohanta},
   title     = {SigClean: A Python Library for Biomedical Signal Cleaning},
   year      = {2025},
   publisher = {GitHub},
