@@ -1,8 +1,7 @@
 [build-system]
 requires = [
-    "setuptools>=45",
+    "setuptools>=61",
     "wheel",
-    "setuptools_scm>=6.2"
 ]
 build-backend = "setuptools.build_meta"
 
@@ -59,20 +58,26 @@ Repository = "https://github.com/diptiman-mohanta/sigclean.git"
 "Bug Tracker" = "https://github.com/diptiman-mohanta/sigclean/issues"
 Changelog = "https://github.com/diptiman-mohanta/sigclean/blob/main/CHANGELOG.md"
 
+[project.scripts]
+sigclean = "sigclean.cli:main"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=6.0",
     "pytest-cov>=2.10",
     "black>=21.0",
     "flake8>=3.8",
+    "Flake8-pyproject>=1.2.3",
     "isort>=5.0",
     "mypy>=0.800",
     "pre-commit>=2.15",
+    "hypothesis>=6.0",
 ]
 test = [
     "pytest>=6.0",
     "pytest-cov>=2.10",
     "pytest-xdist>=2.0",
+    "hypothesis>=6.0",
 ]
 docs = [
     "sphinx>=4.0",
@@ -80,12 +85,19 @@ docs = [
     "sphinx-autodoc-typehints>=1.12",
     "myst-parser>=0.15",
 ]
+io = [
+    "wfdb>=4.0",
+    "pyedflib>=0.1.30",
+]
 all = [
-    "sigclean[dev,test,docs]"
+    "sigclean[dev,test,docs,io]"
 ]
 
 [tool.setuptools]
 packages = ["sigclean"]
+
+[tool.setuptools.package-data]
+sigclean = ["py.typed"]
 
 [tool.setuptools.dynamic]
 version = {attr = "sigclean.__version__"}
@@ -177,9 +189,16 @@ exclude = [
     ".venv",
     ".tox",
 ]
+per-file-ignores = [
+    # These two test modules insert the repo root onto sys.path before
+    # importing sigclean, so that they're runnable without an installed
+    # package; that requires the import to come after a statement.
+    "tests/test_filters.py:E402",
+    "tests/test_utils.py:E402",
+]
 
 [tool.mypy]
-python_version = "3.7"
+python_version = "3.10"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
@@ -197,5 +216,8 @@ strict_equality = true
 module = [
     "scipy.*",
     "matplotlib.*",
+    "pandas.*",
+    "wfdb.*",
+    "pyedflib.*",
 ]
 ignore_missing_imports = true
